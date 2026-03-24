@@ -32,15 +32,15 @@
 body { font-family:'Segoe UI',system-ui,-apple-system,sans-serif; background:var(--bg); color:var(--text); line-height:1.6; transition:background var(--transition),color var(--transition); }
 
 /* Fixed nav bar */
-.nav { position:fixed; top:0; left:0; right:0; z-index:100; backdrop-filter:blur(20px); background:rgba(26,26,46,.92); border-bottom:1px solid rgba(255,255,255,.08); padding:0 1rem; height:48px; display:flex; align-items:center; gap:.75rem; }
-.nav-logo { font-weight:700; font-size:.85rem; color:#fff; white-space:nowrap; display:flex; align-items:center; gap:.5rem; }
-.nav-logo .brand { color:var(--accent); }
-.nav-logo .sep { color:rgba(255,255,255,.2); font-weight:300; }
-.nav-links { display:flex; align-items:center; gap:.4rem; margin-left:auto; }
-.nav-link { background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.12); border-radius:100px; padding:.3rem .7rem; color:rgba(255,255,255,.7); font-size:.7rem; font-weight:600; text-decoration:none; cursor:pointer; transition:.2s; white-space:nowrap; }
+.nav { position:fixed; top:0; left:0; right:0; z-index:100; backdrop-filter:blur(20px); background:rgba(26,26,46,.92); border-bottom:1px solid rgba(255,255,255,.08); padding:0 1rem; height:42px; display:flex; align-items:center; gap:.75rem; }
+.nav-link { background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.12); border-radius:100px; padding:.3rem .7rem; color:rgba(255,255,255,.7); font-size:.72rem; font-weight:600; text-decoration:none; cursor:pointer; transition:.2s; white-space:nowrap; }
 .nav-link:hover { background:rgba(255,255,255,.2); color:#fff; }
-.nav-pills { display:flex; gap:.25rem; overflow-x:auto; scrollbar-width:none; flex:1; mask-image:linear-gradient(90deg,#000 92%,transparent); -webkit-mask-image:linear-gradient(90deg,#000 92%,transparent); }
-.nav-pills::-webkit-scrollbar { display:none; }
+.nav-link.current { background:var(--accent); color:#fff; pointer-events:none; }
+.nav-spacer { flex:1; }
+
+/* Section pills bar */
+.pill-bar { position:fixed; top:42px; left:0; right:0; z-index:99; background:rgba(26,26,46,.88); backdrop-filter:blur(16px); border-bottom:1px solid rgba(255,255,255,.06); padding:4px 1rem; display:flex; overflow-x:auto; scrollbar-width:none; gap:.25rem; }
+.pill-bar::-webkit-scrollbar { display:none; }
 .np { padding:.3rem .65rem; border-radius:100px; font-size:.7rem; font-weight:500; color:rgba(255,255,255,.5); cursor:pointer; transition:.2s; white-space:nowrap; border:none; background:transparent; font-family:inherit; }
 .np:hover { color:#fff; background:rgba(255,255,255,.08); }
 .np.active { background:var(--accent); color:#fff; font-weight:600; }
@@ -48,12 +48,8 @@ body { font-family:'Segoe UI',system-ui,-apple-system,sans-serif; background:var
 .np .tab-badge { display:inline-block; background:rgba(255,255,255,.25); font-size:.62rem; padding:1px 6px; border-radius:10px; margin-left:3px; }
 .np.active .tab-badge { background:rgba(255,255,255,.3); }
 
-/* Progress bar (in nav) */
-.nav-progress { height:3px; background:rgba(255,255,255,.1); border-radius:2px; flex:0 0 60px; overflow:hidden; }
-.nav-progress .progress-fill { height:100%; background:linear-gradient(90deg,#818cf8,#c084fc); border-radius:2px; transition:width .5s ease; width:0%; }
-
 /* Container */
-.container { max-width:860px; margin:0 auto; padding:60px 16px 80px; }
+.container { max-width:860px; margin:0 auto; padding:80px 16px 80px; }
 .section { display:none; animation:fadeIn .4s ease; }
 .section.active { display:block; }
 @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
@@ -148,10 +144,9 @@ table.calc th { background:var(--exp-bg); font-weight:600; text-align:left; }
 
 /* Mobile responsive */
 @media (max-width:600px) {
-  .nav { padding:0 .6rem; gap:.4rem; }
-  .nav-logo .sep, .nav-logo .sub { display:none; }
-  .nav-links { gap:.3rem; }
-  .container { padding:56px 10px 60px; }
+  .nav { padding:0 .6rem; gap:.3rem; }
+  .pill-bar { padding:4px .6rem; }
+  .container { padding:76px 10px 60px; }
   .card { padding:16px; border-radius:10px; }
   .option { padding:14px 14px; font-size:.9rem; }
   .score-bar { flex-direction:column; text-align:center; }
@@ -165,17 +160,16 @@ table.calc th { background:var(--exp-bg); font-weight:600; text-align:left; }
 <body>
 <canvas id="confetti"></canvas>
 <nav class="nav">
-<div class="nav-logo">Practice Exam</div>
-<div class="nav-pills" id="tabs">
+<a class="nav-link current">Practice Exam</a>
+<a href="formulas.html" class="nav-link">Formulas</a>
+<div class="nav-spacer"></div>
+<button class="nav-link" onclick="toggleTheme()" id="themeBtn">🌙</button>
+</nav>
+<div class="pill-bar" id="tabs">
 <button class="np active" onclick="showSection(0)">Part 1: MC <span class="tab-badge" id="badge0">0/9</span></button>
 <button class="np" onclick="showSection(1)">Part 2: Diageo <span class="tab-badge" id="badge1">0/6</span></button>
 <button class="np" onclick="showSection(2)">Part 3: Short <span class="tab-badge" id="badge2">0/4</span></button>
 </div>
-<div class="nav-links">
-<a href="formulas.html" class="nav-link">Formulas</a>
-<button class="nav-link" onclick="toggleTheme()" id="themeBtn">🌙</button>
-</div>
-</nav>
 
 <div class="container">
 
