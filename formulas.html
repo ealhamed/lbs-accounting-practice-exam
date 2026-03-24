@@ -31,25 +31,23 @@
 * { box-sizing:border-box; margin:0; padding:0; }
 body { font-family:'Segoe UI',system-ui,-apple-system,sans-serif; background:var(--bg); color:var(--text); line-height:1.6; transition:background var(--transition),color var(--transition); }
 
-/* Header (top banner — scrolls away naturally) */
-.header-top { background:var(--header-bg); color:#fff; padding:24px 20px 14px; text-align:center; }
-.header-top h1 { font-size:1.45rem; font-weight:700; letter-spacing:.3px; }
-.header-top p { opacity:.7; font-size:.85rem; margin-top:2px; }
-.header-controls { display:flex; align-items:center; justify-content:center; gap:12px; margin-top:10px; }
-
-/* Dark mode toggle */
-.theme-toggle { background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.2); border-radius:20px; padding:6px 14px; cursor:pointer; color:#fff; font-size:.8rem; font-weight:600; display:flex; align-items:center; gap:6px; transition:.2s; }
-.theme-toggle:hover { background:rgba(255,255,255,.25); }
-
-/* Nav tabs (sticky) */
-.tabs { display:flex; gap:2px; background:var(--header-bg); padding:8px; max-width:100%; position:sticky; top:0; z-index:100; flex-wrap:wrap; justify-content:center; }
-.tabs-inner { display:flex; gap:2px; background:rgba(255,255,255,.1); padding:3px; border-radius:10px; max-width:720px; margin:0 auto; flex-wrap:wrap; width:100%; }
-.tab { flex:1; text-align:center; padding:9px 6px; cursor:pointer; border-radius:8px; font-size:.78rem; font-weight:600; transition:.2s; color:rgba(255,255,255,.6); min-width:80px; }
-.tab.active { background:rgba(255,255,255,.2); color:#fff; }
-.tab:hover:not(.active) { background:rgba(255,255,255,.08); }
+/* Fixed nav bar */
+.nav { position:fixed; top:0; left:0; right:0; z-index:100; backdrop-filter:blur(20px); background:rgba(26,26,46,.92); border-bottom:1px solid rgba(255,255,255,.08); padding:0 1rem; height:48px; display:flex; align-items:center; gap:.75rem; }
+.nav-logo { font-weight:700; font-size:.85rem; color:#fff; white-space:nowrap; display:flex; align-items:center; gap:.5rem; }
+.nav-logo .brand { color:var(--accent); }
+.nav-logo .sep { color:rgba(255,255,255,.2); font-weight:300; }
+.nav-links { display:flex; align-items:center; gap:.4rem; margin-left:auto; }
+.nav-link { background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.12); border-radius:100px; padding:.3rem .7rem; color:rgba(255,255,255,.7); font-size:.7rem; font-weight:600; text-decoration:none; cursor:pointer; transition:.2s; white-space:nowrap; }
+.nav-link:hover { background:rgba(255,255,255,.2); color:#fff; }
+.nav-pills { display:flex; gap:.25rem; overflow-x:auto; scrollbar-width:none; flex:1; mask-image:linear-gradient(90deg,#000 92%,transparent); -webkit-mask-image:linear-gradient(90deg,#000 92%,transparent); }
+.nav-pills::-webkit-scrollbar { display:none; }
+.np { padding:.3rem .65rem; border-radius:100px; font-size:.7rem; font-weight:500; color:rgba(255,255,255,.5); cursor:pointer; transition:.2s; white-space:nowrap; border:none; background:transparent; font-family:inherit; }
+.np:hover { color:#fff; background:rgba(255,255,255,.08); }
+.np.active { background:var(--accent); color:#fff; font-weight:600; }
+[data-theme="dark"] .np.active { color:#0f1117; }
 
 /* Container */
-.container { max-width:860px; margin:20px auto; padding:0 16px 80px; }
+.container { max-width:860px; margin:0 auto; padding:60px 16px 80px; }
 .section { display:none; animation:fadeIn .4s ease; }
 .section.active { display:block; }
 @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
@@ -131,48 +129,34 @@ table.calc .red { color:var(--wrong-text); font-weight:600; }
 
 /* Mobile */
 @media (max-width:600px) {
-  .header-top { padding:16px 12px 10px; }
-  .header-top h1 { font-size:1.15rem; }
-  .tabs-inner { flex-direction:column; gap:2px; }
-  .tab { padding:8px; font-size:.78rem; min-width:0; }
-  .container { padding:0 10px 60px; }
+  .nav { padding:0 .6rem; gap:.4rem; }
+  .nav-logo .sep, .nav-logo .sub { display:none; }
+  .nav-links { gap:.3rem; }
+  .container { padding:56px 10px 60px; }
   .card { padding:16px; border-radius:10px; }
   .compare { grid-template-columns:1fr; }
   .formula-box .expr { font-size:.92rem; }
-
-  /* When tabs are stuck, only show active tab */
-  .tabs.stuck .tab { display:none; }
-  .tabs.stuck .tab.active { display:block; flex:none; width:100%; position:relative; }
-  .tabs.stuck .tab.active::after { content:' ▾'; font-size:.7rem; }
-
-  /* Expanded tab picker */
-  .tabs.stuck.tabs-open .tabs-inner { flex-direction:column; gap:2px; }
-  .tabs.stuck.tabs-open .tab { display:block; }
-  .tabs.stuck.tabs-open .tab.active::after { content:' ▴'; }
 }
 </style>
 </head>
 <body>
 
-<div class="header-top">
-<h1>CD54 Formulas & Key Concepts</h1>
-<p>Spring Practice Exam &bull; Prof. Arthur Kraft &bull; LBS EMBA</p>
-<div class="header-controls">
-<a href="index.html" class="theme-toggle" style="text-decoration:none;">&#128221; Practice Exam</a>
-<button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">&#127769; Dark Mode</button>
+<nav class="nav">
+<div class="nav-logo"><span class="brand">CD54</span><span class="sep">|</span> Formulas</div>
+<div class="nav-pills" id="tabs">
+<button class="np active" onclick="showSection(0)">Basics</button>
+<button class="np" onclick="showSection(1)">Revenue</button>
+<button class="np" onclick="showSection(2)">Fixed Assets</button>
+<button class="np" onclick="showSection(3)">Intangibles</button>
+<button class="np" onclick="showSection(4)">Cash Flow</button>
+<button class="np" onclick="showSection(5)">Debt & Provisions</button>
+<button class="np" onclick="showSection(6)">Quick Ref</button>
 </div>
+<div class="nav-links">
+<a href="index.html" class="nav-link">Practice Exam</a>
+<button class="nav-link" onclick="toggleTheme()" id="themeBtn">&#127769;</button>
 </div>
-<div class="tabs" id="tabs">
-<div class="tabs-inner">
-<div class="tab active" onclick="showSection(0)">Basics</div>
-<div class="tab" onclick="showSection(1)">Revenue</div>
-<div class="tab" onclick="showSection(2)">Fixed Assets</div>
-<div class="tab" onclick="showSection(3)">Intangibles</div>
-<div class="tab" onclick="showSection(4)">Cash Flow</div>
-<div class="tab" onclick="showSection(5)">Debt & Provisions</div>
-<div class="tab" onclick="showSection(6)">Quick Ref</div>
-</div>
-</div>
+</nav>
 
 <div class="container">
 
@@ -815,7 +799,7 @@ function showSection(idx) {
   document.querySelectorAll('.section').forEach((s,i) => {
     s.classList.toggle('active', i === idx);
   });
-  document.querySelectorAll('.tab').forEach((t,i) => {
+  document.querySelectorAll('.np').forEach((t,i) => {
     t.classList.toggle('active', i === idx);
   });
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -826,7 +810,7 @@ function toggleTheme() {
   const html = document.documentElement;
   const isDark = html.getAttribute('data-theme') === 'dark';
   html.setAttribute('data-theme', isDark ? '' : 'dark');
-  document.getElementById('themeBtn').innerHTML = isDark ? '&#127769; Dark Mode' : '&#9728;&#65039; Light Mode';
+  document.getElementById('themeBtn').innerHTML = isDark ? '&#127769;' : '&#9728;&#65039;';
   localStorage.setItem('theme', isDark ? '' : 'dark');
 }
 (function() {
@@ -834,42 +818,19 @@ function toggleTheme() {
   if (saved === 'dark') {
     document.documentElement.setAttribute('data-theme', 'dark');
     document.addEventListener('DOMContentLoaded', () => {
-      document.getElementById('themeBtn').innerHTML = '&#9728;&#65039; Light Mode';
+      document.getElementById('themeBtn').innerHTML = '&#9728;&#65039;';
     });
   }
 })();
 
-// Sticky tab picker on mobile
+// Scroll active pill into view
 (function() {
-  const tabs = document.getElementById('tabs');
-  const headerTop = document.querySelector('.header-top');
-
-  // Detect when tabs become stuck using IntersectionObserver on header-top
-  if (window.matchMedia('(max-width:600px)').matches) {
-    const observer = new IntersectionObserver(function(entries) {
-      // When header-top scrolls out of view, tabs are stuck
-      tabs.classList.toggle('stuck', !entries[0].isIntersecting);
-      if (entries[0].isIntersecting) tabs.classList.remove('tabs-open');
-    }, { threshold: 0 });
-    observer.observe(headerTop);
-  }
-
-  // Tap active tab to expand picker when stuck
-  tabs.addEventListener('click', function(e) {
-    if (!tabs.classList.contains('stuck')) return;
-    const tab = e.target.closest('.tab');
-    if (!tab) return;
-    if (tab.classList.contains('active') && !tabs.classList.contains('tabs-open')) {
-      e.stopPropagation();
-      tabs.classList.add('tabs-open');
-      return;
-    }
-    tabs.classList.remove('tabs-open');
+  const pills = document.getElementById('tabs');
+  const observer = new MutationObserver(function() {
+    const active = pills.querySelector('.np.active');
+    if (active) active.scrollIntoView({ behavior:'smooth', inline:'center', block:'nearest' });
   });
-
-  document.addEventListener('click', function(e) {
-    if (!e.target.closest('.tabs')) tabs.classList.remove('tabs-open');
-  });
+  observer.observe(pills, { subtree:true, attributes:true, attributeFilter:['class'] });
 })();
 </script>
 </body>
