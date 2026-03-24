@@ -818,12 +818,12 @@ function showSection(idx) {
 function toggleTheme() {
   const html = document.documentElement;
   const isDark = html.getAttribute('data-theme') === 'dark';
-  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  html.setAttribute('data-theme', isDark ? '' : 'dark');
   document.getElementById('themeBtn').innerHTML = isDark ? '&#127769; Dark Mode' : '&#9728;&#65039; Light Mode';
-  localStorage.setItem('formulas-theme', isDark ? 'light' : 'dark');
+  localStorage.setItem('theme', isDark ? '' : 'dark');
 }
 (function() {
-  const saved = localStorage.getItem('formulas-theme');
+  const saved = localStorage.getItem('theme');
   if (saved === 'dark') {
     document.documentElement.setAttribute('data-theme', 'dark');
     document.addEventListener('DOMContentLoaded', () => {
